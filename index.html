@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高校数学Ⅰ 自主学習サポートシステム | 個別最適化学習Webアプリ</title>
+  
+  <!-- 美しい日本語＆英数字フォント (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- 高速・美麗数式レンダリング (KaTeX) の読み込み -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgESSwCs4UAwZa9VY863yJaFoTsk8U8qPXdEKEsMBy+/qyFN3dBXP0J" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h62lIIkotZJH62sdz1NIgOcXP4RsKSDUT0/iAh5ToODUipHrsaJw/rWGFkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ11XPnY89HB6byRnNcCo2kChExVeFJKToBJEs3cNs3Sc9XXa" crossorigin="anonymous"></script>
+  
+  <!-- アプリケーション独自のスタイル -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-light">
+  <div class="app-container">
+    
+    <!-- 1. ヘッダー ＆ ユニバーサルデザイン設定 -->
+    <header class="header-bar" role="banner">
+      <div class="app-title">
+        <span>高校数学Ⅰ 個別学習</span>
+        <span class="badge">数式自動生成</span>
+      </div>
+      <div class="ud-panel">
+        <span class="ud-label" id="theme-select-label">画面の表示設定：</span>
+        <div class="theme-selector" role="radiogroup" aria-labelledby="theme-select-label">
+          <button class="theme-btn active" id="btn-theme-light" role="radio" aria-checked="true" data-theme="light">🌅 標準</button>
+          <button class="theme-btn" id="btn-theme-dark" role="radio" aria-checked="false" data-theme="dark">🌌 ダーク</button>
+          <button class="theme-btn" id="btn-theme-contrast" role="radio" aria-checked="false" data-theme="contrast">👁️ 高コントラスト</button>
+        </div>
+      </div>
+    </header>
+    
+    <main style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- 2. ナビゲーション・選択メニュー画面 -->
+      <section class="menu-card" id="selection-panel" aria-label="学習単元と難易度の選択">
+        <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+          <span>学習したい内容を選びましょう</span>
+        </h2>
+        
+        <div class="menu-section">
+          <h3 class="section-title">1. 章を選択する</h3>
+          <div class="button-grid" id="chapter-buttons" role="radiogroup" aria-label="章の選択">
+            <!-- JavaScriptで動的生成されます -->
+          </div>
+        </div>
+        
+        <div class="menu-section" id="section-selection-container" style="display: none;">
+          <h3 class="section-title">2. 節を選択する</h3>
+          <div class="select-wrapper">
+            <select class="custom-select" id="section-select" aria-label="節の選択">
+              <!-- JavaScriptで動的生成されます -->
+            </select>
+          </div>
+        </div>
+        
+        <div class="menu-section" id="difficulty-selection-container" style="display: none;">
+          <h3 class="section-title">3. 難易度を選択する</h3>
+          <div class="difficulty-grid" id="difficulty-buttons" role="radiogroup" aria-label="難易度の選択">
+            <button class="nav-btn difficulty-btn basic" id="diff-basic" role="radio" aria-checked="false" data-diff="basic">
+              <span>基本</span>
+            </button>
+            <button class="nav-btn difficulty-btn standard" id="diff-standard" role="radio" aria-checked="false" data-diff="standard">
+              <span>標準</span>
+            </button>
+            <button class="nav-btn difficulty-btn advanced" id="diff-advanced" role="radio" aria-checked="false" data-diff="advanced">
+              <span>応用</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 3. 問題演習エリア -->
+      <section class="workspace-card" id="workspace-panel" style="display: none;" aria-label="問題演習">
+        <div class="problem-header">
+          <div class="problem-meta">
+            <span id="current-chapter-name">章の名前</span>
+            <span>&gt;</span>
+            <span id="current-section-name">節の名前</span>
+          </div>
+          <span class="difficulty-tag standard" id="current-difficulty-tag">標準</span>
+        </div>
+        
+        <!-- 問題表示 -->
+        <div class="problem-body" id="problem-text-area">
+          <!-- ここにKaTeX付きの問題文が動的に入ります -->
+        </div>
+        
+        <!-- 解答指示 -->
+        <div class="instruction-text" id="problem-instruction-area">
+          各枠に当てはまる半角の数値や符号を入力してください。
+        </div>
+        
+        <!-- 動的解答フォーム -->
+        <form class="answer-section" id="answer-form" onsubmit="return false;" aria-label="解答入力">
+          <span class="answer-label">あなたの解答：</span>
+          <div id="dynamic-input-area">
+            <!-- ここに問題に合わせた入力フィールドが動的生成されます -->
+          </div>
+        </form>
+        
+        <!-- 操作ボタンエリア -->
+        <div class="action-area">
+          <button class="btn-primary" id="btn-check-answer" style="background-color: var(--accent);">
+            <span>🔍 答え合わせをする</span>
+          </button>
+          <button class="btn-primary" id="btn-next-problem" style="display: none; background-color: var(--correct-text);">
+            <span>➡️ 次の問題を解く</span>
+          </button>
+          <button class="btn-primary" id="btn-back-to-menu" style="background-color: var(--text-secondary);">
+            <span>🏠 メニューへ戻る</span>
+          </button>
+        </div>
+      </section>
+      
+      <!-- 4. 正誤判定 ＆ 解説エリア -->
+      <section class="result-card" id="result-panel" style="display: none;" aria-live="polite">
+        <!-- JavaScriptで正誤判定の結果が挿入されます -->
+      </section>
+      
+      <section class="solution-box" id="solution-panel" style="display: none;">
+        <h3 class="solution-title">📖 丁寧な解説</h3>
+        <div class="solution-content" id="solution-content-area">
+          <!-- ここにKaTeX付きの解説が動的に入ります -->
+        </div>
+      </section>
+      
+      <!-- テンキー起動時の余白調整用スペーサー -->
+      <div class="spacer-for-tenkey" id="tenkey-spacer"></div>
+    </main>
+  </div>
+  
+  <!-- 5. タブレット対応・カスタムテンキー (ソフトウェアキーボード) -->
+  <div class="tenkey-overlay" id="custom-tenkey" aria-label="数式専用テンキー" aria-hidden="true">
+    <div class="tenkey-header">
+      <span class="tenkey-title" id="tenkey-target-label">キーボード入力</span>
+      <button class="tenkey-close-btn" id="btn-close-tenkey">閉じる ✖</button>
+    </div>
+    <div class="tenkey-grid" role="grid" aria-label="テンキー">
+      <button class="key-btn" data-key="1" role="gridcell">1</button>
+      <button class="key-btn" data-key="2" role="gridcell">2</button>
+      <button class="key-btn" data-key="3" role="gridcell">3</button>
+      <button class="key-btn action-key" data-key="backspace" aria-label="1文字消去" role="gridcell">⌫</button>
+      
+      <button class="key-btn" data-key="4" role="gridcell">4</button>
+      <button class="key-btn" data-key="5" role="gridcell">5</button>
+      <button class="key-btn" data-key="6" role="gridcell">6</button>
+      <button class="key-btn action-key" data-key="clear" aria-label="すべて消去" role="gridcell">AC</button>
+      
+      <button class="key-btn" data-key="7" role="gridcell">7</button>
+      <button class="key-btn" data-key="8" role="gridcell">8</button>
+      <button class="key-btn" data-key="9" role="gridcell">9</button>
+      <button class="key-btn" data-key="-" aria-label="マイナス" role="gridcell">-</button>
+      
+      <button class="key-btn" data-key="0" role="gridcell">0</button>
+      <button class="key-btn" data-key="." aria-label="小数点" role="gridcell">.</button>
+      <button class="key-btn" data-key="," aria-label="カンマ" role="gridcell">,</button>
+      <button class="key-btn" data-key="next" aria-label="次の入力欄へ" role="gridcell">次へ</button>
+      
+      <button class="key-btn confirm-key" id="btn-tenkey-confirm" role="gridcell">答え合わせ</button>
+    </div>
+  </div>
+  
+  <!-- JavaScriptプログラムの読み込み -->
+  <script src="math_problems.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
