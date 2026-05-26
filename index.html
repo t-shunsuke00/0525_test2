@@ -11,9 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
   
   <!-- 高速・美麗数式レンダリング (KaTeX) の読み込み -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgESSwCs4UAwZa9VY863yJaFoTsk8U8qPXdEKEsMBy+/qyFN3dBXP0J" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h62lIIkotZJH62sdz1NIgOcXP4RsKSDUT0/iAh5ToODUipHrsaJw/rWGFkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ11XPnY89HB6byRnNcCo2kChExVeFJKToBJEs3cNs3Sc9XXa" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
   <!-- アプリケーション独自のスタイル -->
   <link rel="stylesheet" href="styles.css">
@@ -44,6 +44,18 @@
         <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
           <span>学習したい内容を選びましょう</span>
         </h2>
+
+        <!-- 全体進捗プログレスバー -->
+        <div class="progress-container" id="total-progress-panel" aria-label="学習の全体進捗">
+          <div class="progress-info-row">
+            <span class="progress-label">📊 全体の学習進捗：</span>
+            <span class="progress-percentage" id="total-progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="total-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-meta" id="total-progress-meta">全 24 単元中、 0 単元をクリアしました！</div>
+        </div>
         
         <div class="menu-section">
           <h3 class="section-title">1. 章を選択する</h3>
@@ -74,6 +86,15 @@
               <span>応用</span>
             </button>
           </div>
+        </div>
+
+        <!-- 苦手分析ボタン -->
+        <div class="menu-section">
+          <button class="btn-analytics" id="btn-open-analytics" aria-label="苦手範囲分析を開く">
+            <span class="analytics-btn-icon">📊</span>
+            <span>苦手範囲を分析する</span>
+            <span class="analytics-btn-badge" id="analytics-badge"></span>
+          </button>
         </div>
       </section>
       
@@ -118,6 +139,16 @@
             <span>🏠 メニューへ戻る</span>
           </button>
         </div>
+      </section>
+
+      <!-- 5. 苦手分析ダッシュボード -->
+      <section class="analytics-card" id="analytics-panel" style="display: none;" aria-label="苦手範囲分析ダッシュボード">
+        <div class="analytics-panel-header">
+          <h2 class="analytics-panel-title">📊 苦手範囲分析</h2>
+          <button class="btn-close-panel" id="btn-close-analytics" aria-label="分析パネルを閉じる">✖ 閉じる</button>
+        </div>
+        <!-- ダッシュボードの内容はJavaScriptで動的生成されます -->
+        <div id="analytics-dashboard-content"></div>
       </section>
       
       <!-- 4. 正誤判定 ＆ 解説エリア -->
@@ -170,6 +201,8 @@
   
   <!-- JavaScriptプログラムの読み込み -->
   <script src="math_problems.js"></script>
+  <script src="ai_generator.js"></script>
+  <script src="analytics.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
